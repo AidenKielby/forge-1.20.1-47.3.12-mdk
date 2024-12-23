@@ -1,6 +1,9 @@
 package net.aiden.coolitemsmod;
 
 import com.mojang.logging.LogUtils;
+import net.aiden.coolitemsmod.block.ModBlocks;
+import net.aiden.coolitemsmod.item.ModItems;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -22,11 +25,13 @@ public class CoolItemsMod {
     public CoolItemsMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
 
         MinecraftForge.EVENT_BUS.register(this);
-
         modEventBus.addListener(this::addCreative);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -38,7 +43,11 @@ public class CoolItemsMod {
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-
+        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){
+            event.accept(ModItems.LARGE_NUT);
+            event.accept(ModBlocks.PRESENT_BLOCK);
+            event.accept(ModBlocks.ODD_LOG);
+        }
     }
 
     @SubscribeEvent
